@@ -1,0 +1,39 @@
+south
+take whirled peas
+south
+south
+south
+take festive hat
+north
+north
+north
+north
+west
+take pointer
+east
+north
+take coin
+north
+take astronaut ice cream
+north
+west
+take dark matter
+south
+take klein bottle
+west
+take mutex
+west
+south
+drop whirled peas
+drop festive hat
+drop pointer
+drop coin
+drop astronaut ice cream
+drop dark matter
+drop klein bottle
+drop mutex
+take whirled peas
+take festive hat
+take coin
+take mutex
+east
