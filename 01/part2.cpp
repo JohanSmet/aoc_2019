@@ -1,19 +1,8 @@
-#include <fstream>
 #include <iostream>
 
-namespace {
-
-static const char *INPUT_FILE = "input.txt";
-
-} // unnamed namespace
+using namespace std;
 
 int main() {
-	std::ifstream input(INPUT_FILE, std::ios::in);
-	if (!input.is_open()) {
-		std::cout << "Error opening file " << INPUT_FILE << std::endl;
-		return -1;
-	}
-	
 	int mass;
 	int total_fuel = 0;
 
@@ -21,7 +10,7 @@ int main() {
 		return (x / 3) - 2;
 	};
 
-	while (input >> mass) {
+	while (cin >> mass) {
 		int fuel = fuel_needed(mass);
 
 		while (fuel > 0) {
@@ -30,7 +19,7 @@ int main() {
 		}	
 	}
 
-	std::cout << "Total fuel required = " << total_fuel << std::endl;
+	cout << "Total fuel required = " << total_fuel << endl;
 
 	return 0;
 }
