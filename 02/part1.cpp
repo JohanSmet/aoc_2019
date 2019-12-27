@@ -1,26 +1,18 @@
-#include <fstream>
-#include <sstream>
+#include <algorithm>
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
-namespace {
-	static const char *INPUT_FILE = "input.txt";
-}
-
-vector<int> parse_program_source(const string &src) {
-
-	stringstream ss(src);
+vector<int> read_program_source() {
 
 	vector<int> result;
 	int v;
 	char c;
 	
-	while (ss >> v) {
+	while (cin >> v) {
 		result.push_back(v);
-		ss >> c;
+		cin >> c;		// read delimiter
 	}
 
 	return result;
@@ -53,31 +45,14 @@ int run_program(vector<int> &program) {
 	return -2;
 }
 
-void dump_program(const vector<int> &program) {
-	string delim = "";
-
-	for (auto v : program) {
-		cout << delim << v;
-		delim = ",";
-	}
-	
-	cout << endl;
-}
-
 int main() {
-	// read source
-	std::string source;
-	ifstream is(INPUT_FILE, ios::in);
-	is >> source;
-	is.close();
-
-	// parse program
-	auto program = parse_program_source(source);
+	// load program
+	auto program = read_program_source();
 
 	// restore to the "1202 program alarm" state
 	program[1] = 12;
 	program[2] = 2;
 
 	run_program(program);
-	dump_program(program);
+	cout << program[0] << endl;
 }

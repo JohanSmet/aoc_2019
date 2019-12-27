@@ -1,4 +1,3 @@
-#include <fstream>
 #include <sstream>
 #include <iostream>
 #include <vector>
@@ -6,21 +5,15 @@
 
 using namespace std;
 
-namespace {
-	static const char *INPUT_FILE = "input.txt";
-}
-
-vector<int> parse_program_source(const string &src) {
-
-	stringstream ss(src);
+vector<int> read_program_source() {
 
 	vector<int> result;
 	int v;
 	char c;
 	
-	while (ss >> v) {
+	while (cin >> v) {
 		result.push_back(v);
-		ss >> c;
+		cin >> c;			// read delimiter
 	}
 
 	return result;
@@ -53,26 +46,9 @@ int run_program(vector<int> &program) {
 	return -2;
 }
 
-void dump_program(const vector<int> &program) {
-	string delim = "";
-
-	for (auto v : program) {
-		cout << delim << v;
-		delim = ",";
-	}
-	
-	cout << endl;
-}
-
 int main() {
-	// read source
-	std::string source;
-	ifstream is(INPUT_FILE, ios::in);
-	is >> source;
-	is.close();
 
-	// parse program
-	auto clean_program = parse_program_source(source);
+	auto clean_program = read_program_source();
 
 	for (int noun = 0; noun <= 99; ++noun) {
 		for (int verb = 0; verb <= 99; ++verb) {
