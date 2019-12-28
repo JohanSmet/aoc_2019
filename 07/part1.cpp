@@ -1,26 +1,20 @@
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <vector>
 #include <algorithm>
 #include <cassert>
 #include <limits>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
-static const char *INPUT_FILE = "input.txt";
-
-vector<int> parse_program_source(const string &src) {
-
-	stringstream ss(src);
+vector<int> read_program_source() {
 
 	vector<int> result;
 	int v;
-	char c;
+	char delim;
 	
-	while (ss >> v) {
+	while (cin >> v) {
 		result.push_back(v);
-		ss >> c;
+		cin >> delim;
 	}
 
 	return result;
@@ -91,7 +85,7 @@ int run_program(vector<int> &program, const vector<int> &input, vector<int> &out
 				set_param(3, get_param(1) < get_param(2) ? 1 : 0);
 				ip += 4;
 				break;
-			case 8: 		// less than
+			case 8: 		// equals
 				set_param(3, get_param(1) == get_param(2) ? 1 : 0);
 				ip += 4;
 				break;
@@ -106,24 +100,17 @@ int run_program(vector<int> &program, const vector<int> &input, vector<int> &out
 	return -2;
 }
 
-void dump_vector(const char *label, const vector<int> &program) {
-
-	cout << label;
-	for (auto v : program) {
-		cout << " " << v;
+ostream &operator <<(ostream &os, const vector<int> &v) {
+	os << "<";
+	for (auto i : v) {
+		os << " " << i;
 	}
-	cout << endl;
+	os << " >";
+	return os;
 }
 
 int main() {
-	// read source
-	std::string source;
-	ifstream is(INPUT_FILE, ios::in);
-	is >> source;
-	is.close();
-
-	// parse program
-	auto clean_program = parse_program_source(source);
+	auto clean_program = read_program_source();
 
 	vector<int> phase_settings = {0, 1, 2, 3, 4};
 
@@ -153,7 +140,7 @@ int main() {
 	} while (next_permutation(begin(phase_settings), end(phase_settings)));
 
 	cout << "Max thruster signal: " << max_output << endl;
-	dump_vector("Phase settings: ", best_settings);
+	cout << "Phase settings: " << best_settings << endl;
 
 	return 0;
 }
