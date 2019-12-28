@@ -1,27 +1,19 @@
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <vector>
 #include <algorithm>
 #include <cassert>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
-namespace {
-	static const char *INPUT_FILE = "input.txt";
-}
-
-vector<int> parse_program_source(const string &src) {
-
-	stringstream ss(src);
+vector<int> read_program_source() {
 
 	vector<int> result;
 	int v;
-	char c;
+	char delim;
 	
-	while (ss >> v) {
+	while (cin >> v) {
 		result.push_back(v);
-		ss >> c;
+		cin >> delim;
 	}
 
 	return result;
@@ -107,29 +99,23 @@ int run_program(vector<int> &program, const vector<int> &input, vector<int> &out
 	return -2;
 }
 
-void dump_vector(const char *label, const vector<int> &program) {
-
-	cout << label;
+ostream &operator <<(ostream &os, const vector<int> &program) {
+	os << "<";
 	for (auto v : program) {
 		cout << " " << v;
 	}
-	cout << endl;
+	os << " >";
+	return os;
 }
 
 int main() {
-	// read source
-	std::string source;
-	ifstream is(INPUT_FILE, ios::in);
-	is >> source;
-	is.close();
-
-	// parse program
-	auto program = parse_program_source(source);
+	// load program
+	auto program = read_program_source();
 
 	// run program 
 	vector<int> output;
 	run_program(program, {5}, output);
-	dump_vector("output:", output);
 
+	cout << "Output: " << output << endl;
 	return 1;
 }
