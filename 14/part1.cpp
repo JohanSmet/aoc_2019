@@ -1,15 +1,12 @@
-#include <fstream>
+#include <algorithm>
+#include <cassert>
+#include <cmath>
 #include <iostream>
 #include <sstream>
-#include <iomanip>
 #include <vector>
-#include <cassert>
-#include <algorithm>
-#include <cmath>
 
 using namespace std;
 
-static const char *INPUT_FILE = "input.txt";
 static const int MATERIAL_ORE = 0;
 static const int MATERIAL_FUEL = 1;
 
@@ -24,7 +21,6 @@ struct Reaction {
 struct NanoFactory {
 
 	bool read_configuation();
-	void dump_configuration();
 	int create_or_fetch_material(const string &name);
 	int solve();
 	
@@ -35,18 +31,12 @@ struct NanoFactory {
 
 bool NanoFactory::read_configuation() {
 
-	ifstream is(INPUT_FILE, ios::in);
-	if (!is.is_open()) {
-		cerr << "Error opening file " << INPUT_FILE << endl;
-		return false;
-	}
-
 	materials.push_back("ORE");
 	materials.push_back("FUEL");
 
 	string line;
 
-	while (getline(is, line)) {
+	while (getline(cin, line)) {
 		istringstream ss(line);
 		int qua;
 		string mat, sep;
@@ -87,24 +77,6 @@ int NanoFactory::create_or_fetch_material(const string &name) {
 		materials.push_back(name);
 		return materials.size() - 1;
 	}
-}
-
-void NanoFactory::dump_configuration() {
-	for (const auto &reaction : reactions) {
-		cout << reaction.output_mat << ": " << reaction.output_qua << " " << materials[reaction.output_mat] << " =";
-		for (int i = 0; i < reaction.input_mat.size(); ++i) {
-			cout << " " << reaction.input_qua[i] << " " << materials[reaction.input_mat[i]];
-		}
-		cout << endl;
-	}
-}
-
-void dump_vector(const char *label, const vector<int> &v) {
-	cout << label << ":";
-	for (auto val : v) {
-		cout << " " << val;
-	}
-	cout << endl;
 }
 
 int NanoFactory::solve() {
