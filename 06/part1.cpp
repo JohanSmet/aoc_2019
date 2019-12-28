@@ -5,32 +5,11 @@
 using namespace std;
 
 struct node_t {
-	string				name;
-	node_t *			parent;
+	node_t *			parent = nullptr;
 	vector<node_t *>	children;
 };
 
 using map_t = unordered_map<string, node_t>;
-
-node_t *fetch_or_create_node(map_t &map, const string &name, node_t *parent) {
-	node_t *result;
-
-	auto found = map.find(name);
-	if (found != end(map)) {
-		result = &found->second;
-	} else {
-		result = &map[name];
-		result->name = name;
-		result->parent = nullptr;
-	}
-
-	if (result->parent == NULL && parent != NULL) {
-		result->parent = parent;
-		parent->children.push_back(result);
-	}
-
-	return result;
-}
 
 bool read_map(map_t &map) {
 	string line;
@@ -40,8 +19,12 @@ bool read_map(map_t &map) {
 		auto center_name = line.substr(0, delim);
 		auto object_name = line.substr(delim + 1);
 
-		auto center = fetch_or_create_node(map, center_name, NULL);
-		auto object = fetch_or_create_node(map, object_name, center);
+		auto center = &map[center_name]; 
+		auto object = &map[object_name];
+		if (object->parent == nullptr) {
+			object->parent = center;
+			center->children.push_back(object);
+		}
 	}
 
 	return true;
