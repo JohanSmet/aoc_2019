@@ -1,4 +1,3 @@
-#include <fstream>
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -8,8 +7,6 @@
 
 using namespace std;
 
-static const char *INPUT_FILE = "input.txt";
-
 using vec_t = int[3];
 
 struct Moon {
@@ -17,20 +14,14 @@ struct Moon {
 	vec_t velocity;
 };
 
-bool read_scan(vector<Moon> &moons) {
-
-	ifstream is(INPUT_FILE, ios::in);
-	if (!is.is_open()) {
-		cerr << "Error opening file " << INPUT_FILE << endl;
-		return false;
-	}
+void read_scan(vector<Moon> &moons) {
 
 	string line;
 	
 	std::regex pos_regex("([-]*[\\d]+)");
 	Moon moon_templ = {0};
 	
-	while (getline(is, line)) {
+	while (getline(cin, line)) {
 		auto reg_begin = sregex_iterator(begin(line), end(line), pos_regex);
 		auto reg_end = sregex_iterator();
 		int i = 0;
@@ -41,8 +32,6 @@ bool read_scan(vector<Moon> &moons) {
 
 		moons.push_back(moon_templ);
 	}
-
-	return true;
 }
 
 ostream &operator<<(ostream &os, const vec_t &vec) {
@@ -114,12 +103,14 @@ bool axis_match_initial(const vector<Moon> &cur, const vector<Moon> &initial, in
 int main() {
 	vector<Moon> moons;
 
-	if (!read_scan(moons)) {
-		return -1;
-	}
+	read_scan(moons);
 
 	auto initial_state = moons;
 	print_moons(0, initial_state);
+
+	// the functions for the three axii are independent. This means that we need to calculate the period of each axis.
+	// Once we have those we need to find a point were these periods match up, which is their lowest common multiple.
+	// Luckily for us C++ includes a function to calculate the LCM (available since C++17).
 
 	int64_t axis_period[3] = {-1, -1, -1};
 	int axis_count = 0;

@@ -1,4 +1,3 @@
-#include <fstream>
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -8,8 +7,6 @@
 
 using namespace std;
 
-static const char *INPUT_FILE = "input.txt";
-
 using vec_t = int[3];
 
 struct Moon {
@@ -17,20 +14,14 @@ struct Moon {
 	vec_t velocity;
 };
 
-bool read_scan(vector<Moon> &moons) {
-
-	ifstream is(INPUT_FILE, ios::in);
-	if (!is.is_open()) {
-		cerr << "Error opening file " << INPUT_FILE << endl;
-		return false;
-	}
+void read_scan(vector<Moon> &moons) {
 
 	string line;
 	
 	std::regex pos_regex("([-]*[\\d]+)");
 	Moon moon_templ = {0};
 	
-	while (getline(is, line)) {
+	while (getline(cin, line)) {
 		auto reg_begin = sregex_iterator(begin(line), end(line), pos_regex);
 		auto reg_end = sregex_iterator();
 		int i = 0;
@@ -41,8 +32,6 @@ bool read_scan(vector<Moon> &moons) {
 
 		moons.push_back(moon_templ);
 	}
-
-	return true;
 }
 
 ostream &operator<<(ostream &os, const vec_t &vec) {
@@ -103,9 +92,7 @@ int calculate_energy(const vector<Moon> &moons) {
 int main() {
 	vector<Moon> moons;
 
-	if (!read_scan(moons)) {
-		return -1;
-	}
+	read_scan(moons);
 
 	print_moons(0, moons);
 
@@ -114,7 +101,7 @@ int main() {
 		print_moons(step, moons);
 	}
 
-	cout << "Energy in system = " << calculate_energy(moons) << endl;
+	cout << endl << "Energy in system = " << calculate_energy(moons) << endl;
 
 	return 0;
 }
