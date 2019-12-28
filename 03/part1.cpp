@@ -1,9 +1,8 @@
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <vector>
 #include <algorithm>
+#include <iostream>
 #include <limits>
+#include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -67,14 +66,6 @@ wire_t parse_wire(const string &src) {
 	return result;
 }
 
-void dump_wire(const wire_t &w) {
-	for (const auto &s : w) {
-		cout << s.horizontal << "(" << s.ends[0].x << "," << s.ends[0].y << ")"
-							 << "(" << s.ends[1].x << "," << s.ends[1].y << ")"
-			 << endl;
-	}
-}
-
 bool intersect_segments(const segment_t &s0, const segment_t &s1, point_t &cross) {
 	
 	// parallel segments don't cross
@@ -119,10 +110,8 @@ int closest_intersection(const wire_t &w0, const wire_t &w1) {
 int main() {
 	// read input
 	std::string w0s, w1s;
-	ifstream is("input.txt", ios::in);
-	getline(is, w0s);
-	getline(is, w1s);
-	is.close();
+	getline(cin, w0s);
+	getline(cin, w1s);
 
 	// parse wires
 	auto w0 = parse_wire(w0s);

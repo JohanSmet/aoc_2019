@@ -1,9 +1,8 @@
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <vector>
 #include <algorithm>
+#include <iostream>
 #include <limits>
+#include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -132,10 +131,8 @@ int closest_intersection(const wire_t &w0, const wire_t &w1) {
 int main() {
 	// read input
 	std::string w0s, w1s;
-	ifstream is("input.txt", ios::in);
-	getline(is, w0s);
-	getline(is, w1s);
-	is.close();
+	getline(cin, w0s);
+	getline(cin, w1s);
 
 	//string w0s = "R75,D30,R83,U83,L12,D49,R71,U7,L72";
 	//string w1s = "U62,R66,U55,R34,D71,R55,D58,R83";
