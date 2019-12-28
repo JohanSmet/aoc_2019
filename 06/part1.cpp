@@ -1,12 +1,8 @@
-#include <fstream>
 #include <iostream>
-#include <sstream>
 #include <unordered_map>
 #include <vector>
 
 using namespace std;
-
-static const char *INPUT_FILE = "input.txt";
 
 struct node_t {
 	string				name;
@@ -37,15 +33,9 @@ node_t *fetch_or_create_node(map_t &map, const string &name, node_t *parent) {
 }
 
 bool read_map(map_t &map) {
-	std::ifstream input(INPUT_FILE, std::ios::in);
-	if (!input.is_open()) {
-		std::cout << "Error opening file " << INPUT_FILE << std::endl;
-		return false;
-	}
-
 	string line;
 
-	while (input >> line) {
+	while (getline(cin, line)) {
 		auto delim = line.find_first_of(')');
 		auto center_name = line.substr(0, delim);
 		auto object_name = line.substr(delim + 1);
@@ -54,7 +44,6 @@ bool read_map(map_t &map) {
 		auto object = fetch_or_create_node(map, object_name, center);
 	}
 
-	input.close();
 	return true;
 }
 
