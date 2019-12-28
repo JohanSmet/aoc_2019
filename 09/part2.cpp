@@ -1,14 +1,10 @@
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <initializer_list>
 #include <cassert>
+#include <initializer_list>
+#include <iostream>
+#include <queue>
+#include <vector>
 
 using namespace std;
-
-static const char *INPUT_FILE = "input.txt";
 
 using base_t = int64_t;
 using program_t = vector<base_t>;
@@ -33,18 +29,15 @@ public:
 	bool			error = false;
 };
 
-
-program_t parse_program_source(const string &src) {
-
-	stringstream ss(src);
+program_t read_program_source() {
 
 	program_t result;
 	base_t v;
-	char c;
+	char delim;
 	
-	while (ss >> v) {
+	while (cin >> v) {
 		result.push_back(v);
-		ss >> c;
+		cin >> delim;
 	}
 
 	return result;
@@ -176,34 +169,24 @@ void Computer::run(vector<base_t> &out) {
 	}
 }
 
-void dump_vector(const char *label, const vector<base_t> &program) {
-
-	cout << label;
-	for (auto v : program) {
-		cout << " " << v;
+ostream &operator <<(ostream &os, const vector<base_t> &v) {
+	os << "<";
+	for (auto i: v) {
+		os << " " << i;
 	}
-	cout << endl;
+	os << " >";
+	return os;
 }
 
 int main() {
-	// read source
-	std::string source;
-	ifstream is(INPUT_FILE, ios::in);
-	is >> source;
-	is.close();
-
-	// parse program
-	auto program = parse_program_source(source); 
-	//auto program = parse_program_source("109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99"); 
-	//auto program = parse_program_source("1102,34915192,34915192,7,4,7,99,0");
-	//auto program = parse_program_source("104,1125899906842624,99");
+	auto program = read_program_source(); 
 
 	Computer comp(program);
 	vector<base_t> output;
 
 	comp.add_input({2});
 	comp.run(output);
-	dump_vector("coords:", output);
+	cout << "Coordinates: " << output << endl;
 
 	return 0;
 }
