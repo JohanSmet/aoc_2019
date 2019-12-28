@@ -12,10 +12,10 @@ static const int MATERIAL_FUEL = 1;
 
 struct Reaction {
 	vector<int>	input_mat;
-	vector<int> input_qua;
+	vector<int64_t> input_qua;
 
 	int output_mat;
-	int output_qua;
+	int64_t output_qua;
 };
 
 struct NanoFactory {
@@ -23,7 +23,7 @@ struct NanoFactory {
 	bool read_configuation();
 	void dump_configuration();
 	int create_or_fetch_material(const string &name);
-	int64_t solve();
+	int64_t solve(int64_t fuel_qua = 1);
 	void reset();
 	
 	vector<string>		materials;
@@ -41,7 +41,7 @@ bool NanoFactory::read_configuation() {
 
 	while (getline(cin, line)) {
 		istringstream ss(line);
-		int qua;
+		int64_t qua;
 		string mat, sep;
 		bool cont = true;
 
@@ -88,12 +88,12 @@ void NanoFactory::reset() {
 	fill(begin(formula), end(formula), 0);
 }
 
-int64_t NanoFactory::solve() {
+int64_t NanoFactory::solve(int64_t fuel_qua) {
 
 	formula[MATERIAL_ORE] = 0;
 
 	for (int i = 0; i < reactions[MATERIAL_FUEL].input_mat.size(); ++i) {
-		formula[reactions[MATERIAL_FUEL].input_mat[i]] += reactions[MATERIAL_FUEL].input_qua[i];
+		formula[reactions[MATERIAL_FUEL].input_mat[i]] += fuel_qua * reactions[MATERIAL_FUEL].input_qua[i];
 	}
 
 	while (true) {
@@ -120,20 +120,23 @@ int main() {
 		return -1;
 	}
 
-	// we could try to be smart by estimating (total ore / ore needed for 1 unit of fuel) and refine the search from there.
-	// but eh, brute force only takes a few seconds, so why bother :-) There are other projects to work on :-)
+	// not exactly binary search, but much faster than naive brute force
 	int64_t ore_stock = 1000000000000;
 	int64_t fuel_stock = 0;
 
-	while (ore_stock >= 0) {
-		int64_t ore_needed = factory.solve();
-		ore_stock -= ore_needed;
-		if (ore_stock >= 0) {
-			fuel_stock += 1;
+	for (int inc = 100000; inc >= 1; inc /= 10) {
+		while (true) {
+			int64_t ore_needed = factory.solve(inc);
+			if (ore_stock >= ore_needed) {
+				ore_stock -= ore_needed;
+				fuel_stock += inc;
+			} else {
+				break;
+			}
 		}
 	}
 
-	cout << "Maximal amount of FUEL: " << fuel_stock << endl;
+	cout << "Maximal amount of FUEL: " << fuel_stock << endl; 
 
 	return 0;
 }
