@@ -1,16 +1,11 @@
-#include <fstream>
-#include <iostream>
-#include <vector>
-#include <cassert>
-#include <unordered_set>
-#include <map>
-#include <limits>
-#include <algorithm>
 #include <cmath>
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <unordered_set>
+#include <vector>
 
 using namespace std;
-
-static const char *INPUT_FILE = "input.txt";
 
 struct Asteroid {
 	int x;
@@ -19,18 +14,12 @@ struct Asteroid {
 	int dist_squared;
 };
 
-bool read_map(vector<Asteroid> &asteroids) {
-
-	ifstream is(INPUT_FILE, ios::in);
-	if (!is.is_open()) {
-		cerr << "Error opening file " << INPUT_FILE << endl;
-		return false;
-	}
+void read_map(vector<Asteroid> &asteroids) {
 
 	string line;
 	int y = 0;
 	
-	while (is >> line) {
+	while (getline(cin, line)) {
 		for (int x = 0; x < line.size(); ++x) {
 			if (line[x] == '#')  {
 				asteroids.push_back({x, y, 0, 0});
@@ -38,11 +27,12 @@ bool read_map(vector<Asteroid> &asteroids) {
 		}
 		y += 1;
 	}
-
-	return true;
 }
 
 void count_los_asteriods(Asteroid &src, const vector<Asteroid> &asteroids) {
+// find the number of asteriods with a direct line-of-sight to the specified asteroid
+//	-> two asteroids block each others line-of-sight if the angle between the origin and them is the same
+//	-> build a set of unique angles from the source to all the other asteroids
 
 	unordered_set<double> angles;
 
@@ -80,9 +70,7 @@ map<double, vector<Asteroid *>> create_angle_lookup(Asteroid &station, vector<As
 int main() {
 	vector<Asteroid> asteroids;
 
-	if (!read_map(asteroids)) {
-		return -1;
-	}
+	read_map(asteroids);
 
 	// part1: find best location for monitoring station
 	for (auto &a : asteroids) {
@@ -99,7 +87,12 @@ int main() {
 	int rank = 0;
 
 	for (auto iter = rbegin(shooter); iter != rend(shooter); ++iter) {
-		cout << ++rank << ": " << iter->first << ": " << iter->second[0]->x << "," << iter->second[0]->y << endl;
+		rank += 1;
+
+		if (rank == 200) {
+			cout << "Asteroid " << rank << " vaporized at " << iter->second[0]->x << "," << iter->second[0]->y << endl;
+			break;
+		}
 	}
 
 	return 0;
