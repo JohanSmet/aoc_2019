@@ -1,12 +1,10 @@
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <unordered_map>
-#include <initializer_list>
 #include <algorithm>
 #include <cassert>
+#include <initializer_list>
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <unordered_map>
 
 using namespace std;
 
@@ -35,18 +33,15 @@ public:
 	bool			error = false;
 };
 
-
-program_t parse_program_source(const string &src) {
-
-	stringstream ss(src);
+program_t read_program_source() {
 
 	program_t result;
 	base_t v;
-	char c;
+	char delim;
 	
-	while (ss >> v) {
+	while (cin >> v) {
 		result.push_back(v);
-		ss >> c;
+		cin >> delim;
 	}
 
 	return result;
@@ -178,14 +173,6 @@ void Computer::run(vector<base_t> &out) {
 	}
 }
 
-void dump_vector(const char *label, const vector<base_t> &program) {
-	cout << label;
-	for (auto v : program) {
-		cout << " " << v;
-	}
-	cout << endl;
-}
-
 union Pos {
 	struct {
 		int32_t x;
@@ -195,14 +182,8 @@ union Pos {
 };
 
 int main() {
-	// read source
-	std::string source;
-	ifstream is(INPUT_FILE, ios::in);
-	is >> source;
-	is.close();
-
-	// parse program
-	auto program = parse_program_source(source); 
+	// load program
+	auto program = read_program_source(); 
 	Computer comp(program);
 
 	// run
