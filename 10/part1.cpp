@@ -1,15 +1,10 @@
-#include <fstream>
-#include <iostream>
-#include <vector>
-#include <cassert>
-#include <unordered_set>
-#include <limits>
 #include <algorithm>
 #include <cmath>
+#include <iostream>
+#include <unordered_set>
+#include <vector>
 
 using namespace std;
-
-static const char *INPUT_FILE = "input.txt";
 
 struct Asteroid {
 	int x;
@@ -17,18 +12,12 @@ struct Asteroid {
 	int los;
 };
 
-bool read_map(vector<Asteroid> &asteroids) {
-
-	ifstream is(INPUT_FILE, ios::in);
-	if (!is.is_open()) {
-		cerr << "Error opening file " << INPUT_FILE << endl;
-		return false;
-	}
+void read_map(vector<Asteroid> &asteroids) {
 
 	string line;
 	int y = 0;
 	
-	while (is >> line) {
+	while (getline(cin, line)) {
 		for (int x = 0; x < line.size(); ++x) {
 			if (line[x] == '#')  {
 				asteroids.push_back({x, y, 0});
@@ -36,11 +25,12 @@ bool read_map(vector<Asteroid> &asteroids) {
 		}
 		y += 1;
 	}
-
-	return true;
 }
 
 void count_los_asteriods(Asteroid &src, const vector<Asteroid> &asteroids) {
+// find the number of asteriods with a direct line-of-sight to the specified asteroid
+//	-> two asteroids block each others line-of-sight if the angle between the origin and them is the same
+//	-> build a set of unique angles from the source to all the other asteroids
 
 	unordered_set<double> angles;
 
@@ -56,9 +46,7 @@ void count_los_asteriods(Asteroid &src, const vector<Asteroid> &asteroids) {
 int main() {
 	vector<Asteroid> asteroids;
 
-	if (!read_map(asteroids)) {
-		return -1;
-	}
+	read_map(asteroids);
 
 	for (auto &a : asteroids) {
 		count_los_asteriods(a, asteroids);
