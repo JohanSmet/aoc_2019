@@ -1,16 +1,12 @@
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <unordered_map>
-#include <initializer_list>
 #include <algorithm>
 #include <cassert>
+#include <initializer_list>
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <unordered_map>
 
 using namespace std;
-
-static const char *INPUT_FILE = "input.txt";
 
 using base_t = int64_t;
 using program_t = vector<base_t>;
@@ -35,18 +31,15 @@ public:
 	bool			error = false;
 };
 
-
-program_t parse_program_source(const string &src) {
-
-	stringstream ss(src);
+program_t read_program_source() {
 
 	program_t result;
 	base_t v;
-	char c;
+	char delim;
 	
-	while (ss >> v) {
+	while (cin >> v) {
 		result.push_back(v);
-		ss >> c;
+		cin >> delim;
 	}
 
 	return result;
@@ -178,14 +171,6 @@ void Computer::run(vector<base_t> &out) {
 	}
 }
 
-void dump_vector(const char *label, const vector<base_t> &program) {
-	cout << label;
-	for (auto v : program) {
-		cout << " " << v;
-	}
-	cout << endl;
-}
-
 enum TILE_ID {
 	EMPTY = 0,
 	WALL = 1,
@@ -207,18 +192,8 @@ struct Tile {
 };
 
 int main() {
-	// read source
-	std::string source;
-	ifstream is(INPUT_FILE, ios::in);
-	if (!is.is_open()) {
-		cerr << "Error opening file" << endl;
-		return -1;
-	}
-	is >> source;
-	is.close();
-
-	// parse program
-	auto program = parse_program_source(source); 
+	// load program
+	auto program = read_program_source(); 
 	Computer comp(program);
 
 	// run

@@ -1,14 +1,10 @@
-#include <fstream>
-#include <sstream>
-#include <iostream>
 #include <array>
-#include <vector>
 #include <cassert>
 #include <functional>
+#include <iostream>
+#include <vector>
 
 using namespace std;
-
-static const char *INPUT_FILE = "input.txt";
 
 using base_t = int64_t;
 using program_t = vector<base_t>;
@@ -33,17 +29,15 @@ public:
 };
 
 
-program_t parse_program_source(const string &src) {
-
-	stringstream ss(src);
+program_t read_program_source() {
 
 	program_t result;
 	base_t v;
-	char c;
+	char delim;
 	
-	while (ss >> v) {
+	while (cin >> v) {
 		result.push_back(v);
-		ss >> c;
+		cin >> delim;
 	}
 
 	return result;
@@ -159,14 +153,6 @@ void Computer::run(input_callback_t input_func, output_callback_t output_func) {
 	}
 }
 
-void dump_vector(const char *label, const vector<base_t> &program) {
-	cout << label;
-	for (auto v : program) {
-		cout << " " << v;
-	}
-	cout << endl;
-}
-
 enum TILE_ID {
 	EMPTY = 0,
 	WALL = 1,
@@ -178,18 +164,8 @@ enum TILE_ID {
 using pos_t = array<int, 2>;
 
 int main() {
-	// read source
-	std::string source;
-	ifstream is(INPUT_FILE, ios::in);
-	if (!is.is_open()) {
-		cerr << "Error opening file" << endl;
-		return -1;
-	}
-	is >> source;
-	is.close();
-
-	// parse program
-	auto program = parse_program_source(source); 
+	// load program
+	auto program = read_program_source(); 
 	Computer comp(program);
 
 	// enable free play
@@ -220,9 +196,9 @@ int main() {
 		}
 	};
 
-	static auto disp_screen = [&]() {
-		cout << "\x1B[2J"; // Clear the screen
-		cout << "\x1B[0;0H"; // place cursor at home position
+	/*static auto disp_screen = [&]() {
+		cout << "\x1B[2J";		// clear the screen
+		cout << "\x1B[0;0H";	// place cursor at home position
 
 		cout << "Score: " << score 
 			 << " Ball at (" << ball[0] << "," << ball[1] << ")"
@@ -234,7 +210,7 @@ int main() {
 			}
 			cout << endl;
 		}
-	};
+	}; */
 
 	comp.run(
 		[&]() -> base_t {
@@ -257,7 +233,6 @@ int main() {
 	);
 
 	cout << "Final score = " << score << endl;
-
 
 	return 0;
 }
