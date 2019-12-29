@@ -1,14 +1,9 @@
-#include <fstream>
-#include <iostream>
-#include <array>
-#include <vector>
-#include <cassert>
-#include <functional>
 #include <algorithm>
+#include <cassert>
+#include <iostream>
+#include <vector>
 
 using namespace std;
-
-static const char *INPUT_FILE = "input.txt";
 
 vector<int8_t> fft(const vector<int8_t> &input) {
 	vector<int8_t> output;
@@ -30,28 +25,14 @@ vector<int8_t> fft(const vector<int8_t> &input) {
 	return output;
 }
 
-void dump_vector(const vector<int8_t> &v) {
-	for (auto i : v) {
-		cout << (char)('0' + i);
-	}
-	cout << endl;
-}
-
 int main() {
 	vector<int8_t> input;
 
 	// read source
-	std::string source;
-	ifstream is(INPUT_FILE, ios::in);
-	if (!is.is_open()) {
-		cerr << "Error opening file" << endl;
-		return -1;
-	}
 	char c;
-	while (is >> c) {
+	while (cin >> c) {
 		input.push_back(c - '0');
 	}
-	is.close();
 
 	// run
 	for (int step = 1; step <= 100; ++step) {
@@ -59,5 +40,9 @@ int main() {
 		input = output;
 	}
 
-	dump_vector(input);
+	// display
+	for (int i = 0; i < 8; ++i) {
+		cout << static_cast<char>('0' + input[i]);
+	}
+	cout << endl;
 }
