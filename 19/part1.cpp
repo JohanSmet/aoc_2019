@@ -1,4 +1,3 @@
-#include <sstream>
 #include <iostream>
 #include <array>
 #include <vector>
@@ -33,17 +32,15 @@ public:
 };
 
 
-program_t parse_program_source(const string &src) {
-
-	stringstream ss(src);
+program_t read_program_source() {
 
 	program_t result;
 	base_t v;
-	char c;
+	char delim;
 	
-	while (ss >> v) {
+	while (cin >> v) {
 		result.push_back(v);
-		ss >> c;
+		cin >> delim;
 	}
 
 	return result;
@@ -160,12 +157,8 @@ void Computer::run(input_callback_t input_func, output_callback_t output_func) {
 }
 
 int main() {
-	// read source
-	std::string source;
-	cin >> source;
-
-	// parse program
-	auto program = parse_program_source(source); 
+	// load program
+	auto program = read_program_source(); 
 
 	// run to check the tractor beam (just brute-force it)
 	bool hor = true;
