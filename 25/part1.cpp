@@ -1,11 +1,10 @@
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <array>
-#include <vector>
-#include <cassert>
-#include <functional>
 #include <algorithm>
+#include <cassert>
+#include <fstream>
+#include <functional>
+#include <iostream>
+#include <sstream>
+#include <vector>
 
 using namespace std;
 
