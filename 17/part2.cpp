@@ -1,17 +1,11 @@
-#include <fstream>
-#include <sstream>
-#include <iostream>
+#include <algorithm>
 #include <array>
-#include <vector>
 #include <cassert>
 #include <functional>
-#include <algorithm>
-
-#include <unistd.h>
+#include <iostream>
+#include <vector>
 
 using namespace std;
-
-static const char *INPUT_FILE = "input.txt";
 
 using base_t = int64_t;
 using program_t = vector<base_t>;
@@ -35,18 +29,15 @@ public:
 	bool			error = false;
 };
 
-
-program_t parse_program_source(const string &src) {
-
-	stringstream ss(src);
+program_t read_program_source() {
 
 	program_t result;
 	base_t v;
-	char c;
+	char delim;
 	
-	while (ss >> v) {
+	while (cin >> v) {
 		result.push_back(v);
-		ss >> c;
+		cin >> delim;
 	}
 
 	return result;
@@ -190,18 +181,8 @@ ostream &operator<<(ostream &os, const pos_t &pos) {
 }
 
 int main() {
-	// read source
-	std::string source;
-	ifstream is(INPUT_FILE, ios::in);
-	if (!is.is_open()) {
-		cerr << "Error opening file" << endl;
-		return -1;
-	}
-	is >> source;
-	is.close();
-
 	// parse program
-	auto program = parse_program_source(source); 
+	auto program = read_program_source(); 
 	Computer comp(program);
 
 	// run to get the maze structure
