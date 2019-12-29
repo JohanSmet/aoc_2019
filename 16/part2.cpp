@@ -1,14 +1,9 @@
-#include <fstream>
-#include <iostream>
-#include <array>
-#include <vector>
-#include <cassert>
-#include <numeric>
 #include <algorithm>
+#include <iostream>
+#include <vector>
+#include <numeric>
 
 using namespace std;
-
-static const char *INPUT_FILE = "input.txt";
 
 // A key observation to make part 2 finish in a decent time frame is that due to the structure of the pattern
 // the new value of an element in the second half is just the sum of the element and all the subsequent elements.
@@ -23,33 +18,19 @@ vector<int> decode(const vector<int> &input) {
 
 	vector<int> output;
 	output.reserve(input.size());
-	for_each(crbegin(sums), crend(sums), [&](auto x) {output.push_back(abs(x) % 10);});
+	transform(crbegin(sums), crend(sums), back_inserter(output), [&](auto x) {return abs(x) % 10;});
 	
 	return output;
-}
-
-void dump_vector(const vector<int> &v, int offset, int count) {
-	for (int i = offset; i < offset+count; ++i) {
-		cout << (char)('0' + v[i]);
-	}
-	cout << endl;
 }
 
 int main() {
 	vector<int8_t> input_data;
 
 	// read source
-	std::string source;
-	ifstream is(INPUT_FILE, ios::in);
-	if (!is.is_open()) {
-		cerr << "Error opening file" << endl;
-		return -1;
-	}
 	char c;
-	while (is >> c) {
+	while (cin >> c) {
 		input_data.push_back(c - '0');
 	}
-	is.close();
 
 	// duplicate input
 	vector<int> input;
@@ -78,5 +59,9 @@ int main() {
 		input = output;
 	}
 
-	dump_vector(input, 0, 8);
+	// display
+	for (int i = 0; i < 8; ++i) {
+		cout << static_cast<char>('0' + input[i]);
+	}
+	cout << endl;
 }
