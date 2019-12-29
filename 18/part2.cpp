@@ -1,11 +1,9 @@
+#include <bitset>
 #include <iostream>
-#include <array>
-#include <vector>
-#include <algorithm>
 #include <limits>
 #include <map>
 #include <numeric>
-#include <bitset>
+#include <vector>
 
 // not a generic solution - assumes the shortest path in a quadrant is the best path overal e.g. when robot needs a key 
 // from another quadrant it just waits at the door until a robot in another quadrant picks it up.
@@ -13,13 +11,14 @@
 using namespace std;
 
 using pos_t = array<int, 2>;
-using KeySet = bitset<26>;
+using keyset_t = bitset<26>;
 
 struct Path {
 	Path() = default;
-	int		len = numeric_limits<int>::max();
-	KeySet	required_keys;
-	KeySet	collected_keys;
+
+	int			len = numeric_limits<int>::max();
+	keyset_t	required_keys;
+	keyset_t	collected_keys;
 };
 
 pos_t operator+(const pos_t &a, const pos_t &b) {
@@ -82,7 +81,7 @@ struct Maze {
 		}
 	}
 
-	void length_shortest_path(int robot, int node = -1, int total = 0, KeySet retrieved = 0) {
+	void length_shortest_path(int robot, int node = -1, int total = 0, keyset_t retrieved = 0) {
 
 		auto &paths = (node == -1) ? entrance_paths[robot] : key_paths[node];
 
@@ -133,7 +132,7 @@ private:
 		return c != '#';
 	}
 
-	void r_walk_maze(vector<Path> &path, pos_t cur, int len, KeySet required_keys = 0, KeySet collected_keys = 0) {
+	void r_walk_maze(vector<Path> &path, pos_t cur, int len, keyset_t required_keys = 0, keyset_t collected_keys = 0) {
 
 		visited[cur[1]][cur[0]] = true;
 		
@@ -178,7 +177,7 @@ public:
 		numeric_limits<int>::max(),
 		numeric_limits<int>::max()
 	};
-	KeySet					robot_keys[4];
+	keyset_t				robot_keys[4];
 	map<pair<unsigned long, int>, int> path_cache;
 };
 
@@ -194,7 +193,7 @@ int main() {
 	for (int r = 0; r < 4; ++r) {
 		maze.path_cache.clear();
 		maze.length_shortest_path(r, -1, 0, maze.robot_keys[r]);
-		cout << "Robot " << r << ":" << maze.shortest_path[r] << endl;
+		cout << "Robot " << r << ": " << maze.shortest_path[r] << endl;
 	}
 
 	cout << "Total: " << std::accumulate(begin(maze.shortest_path), end(maze.shortest_path), 0) << endl;

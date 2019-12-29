@@ -1,30 +1,27 @@
-#include <iostream>
-#include <array>
-#include <vector>
-#include <cassert>
 #include <algorithm>
-#include <limits>
-#include <map>
-#include <numeric>
 #include <bitset>
+#include <iostream>
+#include <map>
+#include <vector>
 
 using namespace std;
 
 using pos_t = array<int, 2>;
-using KeySet = bitset<26>;
+using keyset_t = bitset<26>;
 
 struct Path {
 	Path() = default;
-	int		len = numeric_limits<int>::max();
-	KeySet	required_keys;
-	KeySet	collected_keys;
+
+	int			len = numeric_limits<int>::max();
+	keyset_t	required_keys;
+	keyset_t	collected_keys;
 };
 
 pos_t operator+(const pos_t &a, const pos_t &b) {
 	return {a[0] + b[0], a[1] + b[1]};
 }
 
-ostream &operator<<(ostream &os, const KeySet &keys) {
+ostream &operator<<(ostream &os, const keyset_t &keys) {
 	for (int i = 0; i < keys.size(); ++i) {
 		cout << ((keys[i]) ? (char)('a' + i) : '-');
 	}
@@ -76,7 +73,7 @@ struct Maze {
 	}
 
 
-	void length_shortest_path(int node = -1, int total = 0, KeySet retrieved = 0) {
+	void length_shortest_path(int node = -1, int total = 0, keyset_t retrieved = 0) {
 
 		auto &paths = (node == -1) ? entrance_paths : key_paths[node];
 
@@ -148,7 +145,7 @@ private:
 		return c != '#';
 	}
 
-	void r_walk_maze(vector<Path> &path, pos_t cur, int len, KeySet required_keys = 0, KeySet collected_keys = 0) {
+	void r_walk_maze(vector<Path> &path, pos_t cur, int len, keyset_t required_keys = 0, keyset_t collected_keys = 0) {
 
 		visited[cur[1]][cur[0]] = true;
 		
