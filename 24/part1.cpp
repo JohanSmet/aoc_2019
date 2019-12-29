@@ -1,6 +1,5 @@
-#include <algorithm>
-#include <iostream>
 #include <bitset>
+#include <iostream>
 #include <vector>
 
 using namespace std;
@@ -19,16 +18,6 @@ void read_input() {
 	}
 
 	history.push_back(scan);
-}
-
-void print_scan(scan_t scan) {
-	for (int i = 0; i < scan.size(); ++i) {
-		cout << (scan[i] ? '#' : '.');
-		
-		if (i % 5 == 4) {
-			cout << endl;
-		}
-	}
 }
 
 scan_t simulate(scan_t input) {
